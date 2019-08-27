@@ -1,0 +1,27 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd
+    ">
+
+    <routeContext id="orderCompletionRoutes" xmlns="http://camel.apache.org/schema/spring">
+        <route id="orderCompletion">
+            <from uri="direct:orderCompletion"/>
+
+            <to uri="log: -> -> orderCompletion START"/>
+
+            <to uri="log: -> -> orderCompletion Transaction1 done."/>
+
+            <!-- Assuming something errors in the transaction2. -->
+            <throwException ref="forced"/>
+            <to uri="log: -> -> orderCompletion Transaction2 done."/>
+
+            <to uri="log: -> -> orderCompletion END"/>
+        </route>
+    </routeContext>
+</beans>

@@ -1,0 +1,43 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd
+    ">
+
+    <routeContext id="orderRoutes"
+                  xmlns="http://camel.apache.org/schema/spring">
+        <route id="order">
+            <from uri="timer:ordertest?period=10000"/>
+
+            <to uri="log: order START"/>
+
+            <doTry>
+                <to uri="log: -> order doTry START"/>
+
+                <to uri="direct:orderCompletion"/>
+
+                <!--
+                    If you enable the <throwException> below instead of `direct:orderCompletion`,
+                    the `orderCompletionErrorHandler` route will be completed successfully.
+                     * `onException` in the route will be triggered
+                     * `Compensation Transaction2` in the route will be executed
+                 -->
+                <!--<throwException ref="forced"/>-->
+
+                <to uri="log: -> order doTry END"/>
+
+                <doCatch>
+                    <exception>java.lang.IllegalArgumentException</exception>
+                    <to uri="direct:orderCompletionErrorHandler"/>
+                </doCatch>
+            </doTry>
+
+            <to uri="log: order END"/>
+        </route>
+    </routeContext>
+</beans>
