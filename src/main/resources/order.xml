@@ -20,8 +20,8 @@
                 <to uri="log: -> order doTry START"/>
 
                 <!--
-                    A process will go into the `doCatch` clause due the `orderCompletion` throws exception,
-                    but the `orderCompletionErrorHandler` route in `doCatch` will be failured.
+                    A process will go into the `doCatch` clause due to the `orderCompletion` throws exception,
+                    but the `orderCompletionErrorHandler` route in `doCatch` will be failed.
                     Even though the `orderCompletionErrorHandler` has `onException` with `continued`, the `onException` is not triggered.
                  -->
                 <to uri="direct:orderCompletion"/>
